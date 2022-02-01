@@ -37,141 +37,6 @@ services:
     networks:
       default:
         ipv4_address: ${WEBUI_IP}
-  nrf:
-    image: docker_open5gs
-    container_name: nrf
-    env_file:
-      - .env
-    environment:
-      - COMPONENT_NAME=nrf-1
-    volumes:
-      - ./nrf:/mnt/nrf
-      - ./log:/open5gs/install/var/log/open5gs
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    expose:
-      - "7777/tcp"
-    networks:
-      default:
-        ipv4_address: ${NRF_IP}
-  ausf:
-    image: docker_open5gs
-    depends_on:
-      - nrf
-    container_name: ausf
-    env_file:
-      - .env
-    environment:
-      - COMPONENT_NAME=ausf-1
-    volumes:
-      - ./ausf:/mnt/ausf
-      - ./log:/open5gs/install/var/log/open5gs
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    expose:
-      - "7777/tcp"
-    networks:
-      default:
-        ipv4_address: ${AUSF_IP}
-  udr:
-    image: docker_open5gs
-    depends_on:
-      - nrf
-      - mongo
-    container_name: udr
-    env_file:
-      - .env
-    environment:
-      - COMPONENT_NAME=udr-1
-    volumes:
-      - ./udr:/mnt/udr
-      - ./log:/open5gs/install/var/log/open5gs
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    expose:
-      - "7777/tcp"
-    networks:
-      default:
-        ipv4_address: ${UDR_IP}
-  udm:
-    image: docker_open5gs
-    depends_on:
-      - nrf
-    container_name: udm
-    env_file:
-      - .env
-    environment:
-      - COMPONENT_NAME=udm-1
-    volumes:
-      - ./udm:/mnt/udm
-      - ./log:/open5gs/install/var/log/open5gs
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    expose:
-      - "7777/tcp"
-    networks:
-      default:
-        ipv4_address: ${UDM_IP}
-  pcf:
-    image: docker_open5gs
-    depends_on:
-      - nrf
-      - mongo
-    container_name: pcf
-    env_file:
-      - .env
-    environment:
-      - COMPONENT_NAME=pcf-1
-    volumes:
-      - ./pcf:/mnt/pcf
-      - ./log:/open5gs/install/var/log/open5gs
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    expose:
-      - "7777/tcp"
-    networks:
-      default:
-        ipv4_address: ${PCF_IP}
-  bsf:
-    image: docker_open5gs
-    depends_on:
-      - nrf
-      - mongo
-    container_name: bsf
-    env_file:
-      - .env
-    environment:
-      - COMPONENT_NAME=bsf-1
-    volumes:
-      - ./bsf:/mnt/bsf
-      - ./log:/open5gs/install/var/log/open5gs
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    expose:
-      - "7777/tcp"
-    networks:
-      default:
-        ipv4_address: ${BSF_IP}
-  nssf:
-    image: docker_open5gs
-    depends_on:
-      - nrf
-      - mongo
-    container_name: nssf
-    env_file:
-      - .env
-    environment:
-      - COMPONENT_NAME=nssf-1
-    volumes:
-      - ./nssf:/mnt/nssf
-      - ./log:/open5gs/install/var/log/open5gs
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    expose:
-      - "7777/tcp"
-    networks:
-      default:
-        ipv4_address: ${NSSF_IP}
   hss:
     image: docker_open5gs
     container_name: hss
@@ -235,15 +100,13 @@ services:
     expose:
       - "8805/udp"
       - "2152/udp"
-    # ports:
-    #   - "2152:2152/udp"
+    ports:
+      - "2152:2152/udp"
     networks:
       default:
         ipv4_address: ${SGWU_IP}
   smf:
     image: docker_open5gs
-    depends_on:
-      - nrf
     container_name: smf
     env_file:
       - .env
@@ -270,7 +133,6 @@ services:
   upf:
     image: docker_open5gs
     depends_on:
-      - nrf
       - smf
     container_name: upf
     env_file:
@@ -296,35 +158,6 @@ services:
     networks:
       default:
         ipv4_address: ${UPF_IP}
-  amf:
-    image: docker_open5gs
-    depends_on:
-      - smf
-      - upf
-      - nrf
-      - ausf
-      - udm
-      - udr
-      - pcf
-      - bsf
-    container_name: amf
-    env_file:
-      - .env
-    environment:
-      - COMPONENT_NAME=amf-1
-    volumes:
-      - ./amf:/mnt/amf
-      - ./log:/open5gs/install/var/log/open5gs
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-    expose:
-      - "38412/sctp"
-      - "7777/tcp"
-    # ports:
-    #   - "38412:38412/sctp"
-    networks:
-      default:
-        ipv4_address: ${AMF_IP}
   mme:
     image: docker_open5gs
     depends_on:
@@ -353,8 +186,8 @@ services:
       - "5868/sctp"
       - "36412/sctp"
       - "2123/udp"
-    # ports:
-    #   - "36412:36412/sctp"
+    ports:
+      - "36412:36412/sctp"
     networks:
       default:
         ipv4_address: ${MME_IP}

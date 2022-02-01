@@ -36,12 +36,6 @@ smf:
       - PCSCF_IP
     mtu: 1400
 
-nrf:
-    sbi:
-      - addr:
-          - NRF_IP
-        port: 7777
-
 upf:
     pfcp:
       - addr: UPF_IP

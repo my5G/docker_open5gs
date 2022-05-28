@@ -2,40 +2,35 @@ logger:
     file: /open5gs/install/var/log/open5gs/smf.log
 
 parameter:
-    no_ipv4v6_local_addr_in_packet_filter: true
 
 smf:
-    freeDiameter: /open5gs/install/etc/freeDiameter/smf.conf
     sbi:
       - addr: SMF_IP
         port: 7777
+    pfcp:
+      - addr: SMF_IP
     gtpc:
       - addr: SMF_IP
     gtpu:
       - addr: SMF_IP
-    pfcp:
-      - addr: SMF_IP
     subnet:
-      - addr: 192.168.100.1/24
-        dnn: internet
-        dev: ogstun
+      - addr: 10.45.0.1/16
+        dnn: default
       - addr: 2001:230:cafe::1/48
-        dev: ogstun
-        dnn: internet
-      - addr: 192.168.101.1/24
-        dnn: ims
-        dev: ogstun2
-      - addr: 2001:230:babe::1/48
-        dnn: ims
-        dev: ogstun2
+        dnn: default
     dns:
       - 8.8.8.8
       - 8.8.4.4
       - 2001:4860:4860::8888
       - 2001:4860:4860::8844
-    p-cscf:
-      - PCSCF_IP
     mtu: 1400
+    freeDiameter: /open5gs/install/etc/freeDiameter/smf.conf
+    info:
+      - s_nssai:
+          - sst: 1
+            sd: 1
+            dnn:
+              - default
 
 nrf:
     sbi:
@@ -46,3 +41,4 @@ nrf:
 upf:
     pfcp:
       - addr: UPF_IP
+        dnn: default
